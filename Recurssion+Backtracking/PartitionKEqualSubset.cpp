@@ -1,34 +1,59 @@
 class Solution {
 public:
-    bool solve(vector<int> nums,vector<bool>& visited,int currsum,int idx,int subsetsum,int k){
-        if(k==0)return true;
-        
-        if(currsum>subsetsum)return false;
-        
-        if(currsum==subsetsum){
-            return solve(nums,visited,0,0,subsetsum,k-1);
+    bool helper(int i,int bucketNum,int bucketSum,int reqSum,int K,vector<int>& nums,vector<int>& alreadyPicked){
+
+        if(bucketNum == K+1) return true;
+
+        if(bucketSum == reqSum){
+            return helper(0,bucketNum + 1,0,reqSum,K,nums,alreadyPicked);
         }
-        for(int i=idx;i<nums.size();i++){
-            if(visited[i])continue;
-            visited[i] = true;
-            if(solve(nums,visited,currsum+nums[i],i+1,subsetsum,k))return true;
-            visited[i] = false;
-			//optimization 
-            if(currsum==0)break;
+
+        if(bucketSum > reqSum){
+            return false;
         }
-        return false;
+
+        if(i >= nums.size()) return false;
+
+        if(alreadyPicked[i] == 1){
+            return helper(i+1,bucketNum,bucketSum,reqSum,K,nums,alreadyPicked);
+        }else{
+            bool op1 = false;
+            if(bucketSum + nums[i] <= reqSum){
+                bucketSum = bucketSum + nums[i];
+                alreadyPicked[i] = 1;
+                op1 = helper(i+1,bucketNum,bucketSum,reqSum,K,nums,alreadyPicked);
+                
+                if(op1 == false) {
+                     bucketSum = bucketSum - nums[i];
+                     alreadyPicked[i] = 0;
+                }
+            }
+
+           
+            bool op2 = helper(i+1,bucketNum,bucketSum,reqSum,K,nums,alreadyPicked);
+
+            return op1 | op2;
+
+
+        }
+
+
     }
     bool canPartitionKSubsets(vector<int>& nums, int k) {
         int n = nums.size();
-        if(k > n)return false;
-        int sum=0;
-        for(auto n : nums)
-            sum += n;
-       if (nums.size() < k || sum % k) return false;
-        int subsetsum = sum/k;
-        vector<bool> v(n,false);
-		//sort array in decreasing order
-        sort(nums.begin(), nums.end(), greater<int>());
-        return solve(nums,v,0,0,subsetsum,k);
+        vector<int> alreadyPicked(n,0);
+
+        int sum =0;
+
+        for(int i=0;i<nums.size();i++){
+            sum = sum + nums[i];
+        }
+
+        if(sum % k != 0) return false;
+
+        int reqSum = sum/k;
+
+       return helper(0,1,0,reqSum,k,nums,alreadyPicked);
+        
     }
 };

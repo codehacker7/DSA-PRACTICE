@@ -10,4 +10,4 @@ Example:
 Input: nums = [2, 7, 11, 15], target = 9
 Output: [2, 7]
 
-If you want a curated list for above questions please feel free to use this repo
+If you want a curated list for the problems like above feel free to email me on kavyansheduv@gmail.com for the list of problems that I am practicing

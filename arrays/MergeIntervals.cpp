@@ -16,7 +16,7 @@ public:
             int newIntervalEnd = currentInterval[1];
 
             if (mergingIntervalEnd >= newIntervalStart) {
-                mergingIntervalEnd = max(newIntervalEnd,mergingIntervalEnd;
+                mergingIntervalEnd = max(newIntervalEnd,mergingIntervalEnd);
             }else{
                 ans.push_back({mergingIntervalStart, mergingIntervalEnd});
                 mergingIntervalStart = newIntervalStart;
